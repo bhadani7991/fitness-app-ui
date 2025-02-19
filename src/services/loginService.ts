@@ -6,18 +6,17 @@ export interface LoginRequest {
   email: string;
   password: string;
 }
-
-export const login = async (
-  loginRequest: LoginRequest
-): Promise<LoginResponse> => {
-  try {
-    const response: AxiosResponse<LoginResponse> = await axios.post(
-      BASE_URL + "/login",
-      loginRequest,
-      { withCredentials: true }
-    );
-    return response.data;
-  } catch (error) {
-    throw new Error("Error while logging in");
-  }
+export const loginServiceAgent = {
+  login: async (loginRequest: LoginRequest) => {
+    try {
+      const response: AxiosResponse<LoginResponse> = await axios.post(
+        BASE_URL + "/login",
+        loginRequest,
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  },
 };

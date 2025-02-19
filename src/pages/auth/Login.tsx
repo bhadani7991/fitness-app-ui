@@ -8,8 +8,11 @@ import {
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../services/loginService";
+import { loginServiceAgent } from "../../services/loginService";
 import { addUser } from "../../utils/userSlice";
+import getAxiosError from "../../utils/axiosError";
+import { toast } from "react-toastify";
+import { validateLoginRequest } from "../../utils/validation";
 
 interface LoginProps {}
 
@@ -21,7 +24,8 @@ const Login: React.FC<LoginProps> = (props) => {
 
   const handleLoginRequest = async () => {
     try {
-      const response = await login({
+      validateLoginRequest(email, password);
+      const response = await loginServiceAgent.login({
         email,
         password,
       });
@@ -29,7 +33,9 @@ const Login: React.FC<LoginProps> = (props) => {
       //localStorage for handling the refersh case
       localStorage.setItem("user", JSON.stringify(response.entity));
       return navigate("/");
-    } catch (error) {
+    } catch (error: any) {
+      const appError = getAxiosError(error);
+      toast.info(appError.errorMessage, { toastId: "loginError" });
     } finally {
       //clean up logic
     }

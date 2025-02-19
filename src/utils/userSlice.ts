@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../pages/auth/model/login";
+import { createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
   name: "User",

@@ -13,13 +13,19 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux"; // Import useDispatch
 import { RootState } from "../utils/appStore";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import axios, { isAxiosError } from "axios";
+import { BASE_URL } from "../appConstant";
+import { toast } from "react-toastify";
+import { removeUser } from "../utils/userSlice";
+import { errorMonitor } from "events";
+import getAxiosError from "../utils/axiosError";
 
 interface Props {
   window?: () => Window;
@@ -33,8 +39,9 @@ const NavBar = (props: Props) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
   const userData = useSelector((store: RootState) => store.user);
+  const dispatch = useDispatch(); // Initialize dispatch
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -46,6 +53,24 @@ const NavBar = (props: Props) => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    handleMenuClose();
+    try {
+      const response = await axios.post(`${BASE_URL}/logout`);
+
+      toast.info(response.data, { toastId: "logoutResponse" });
+      dispatch(removeUser());
+      localStorage.removeItem("user");
+      return navigate("/login");
+    } catch (error) {
+      const appError = getAxiosError(error);
+      console.log(appError);
+      toast.error(appError.errorMessage, { toastId: "logoutError" });
+    } finally {
+      //clean up logic
+    }
   };
 
   const drawer = (
@@ -142,13 +167,7 @@ const NavBar = (props: Props) => {
                   </MenuItem>
 
                   <Divider />
-                  <MenuItem
-                    onClick={handleMenuClose}
-                    component={Link}
-                    to="/logout"
-                  >
-                    Logout
-                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </>
             )}
