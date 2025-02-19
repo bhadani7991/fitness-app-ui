@@ -1,61 +1,58 @@
-import { Box, Grid, Grid2, Paper, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import WorkoutModal from "./model/WorkoutModel";
+import getAxiosError from "../../utils/axiosError";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { BASE_URL } from "../../appConstant";
+import { Box, Tab, Tabs } from "@mui/material";
+import { Workout } from "./model/workouts";
+import WorkoutTrendChart from "./model/WorkoutTrendChart";
 
 interface WorkoutProps {}
 
-const Workout: React.FC<WorkoutProps> = (props) => {
-  const [workoutDates] = useState(["2024-02-15", "2024-02-18", "2024-02-21"]);
-
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
-
-  // Get first and last day of the month
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  // Create an array of days
-  const daysArray = Array.from(
-    { length: firstDay + daysInMonth },
-    (_, index) => {
-      const day = index - firstDay + 1;
-      return day > 0 ? day : null;
+const Workouts: React.FC<WorkoutProps> = ({}) => {
+  const [workoutData, setWorkoutData] = useState<Workout[]>([]);
+  const fetchWorkoutData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/workouts`, {
+        withCredentials: true,
+      });
+      console.log(response);
+      setWorkoutData(response.data.entity);
+    } catch (error) {
+      const appError = getAxiosError(error);
+      toast.error(appError.errorMessage, { toastId: "fetchWorkoutDataError" });
     }
-  );
+  };
+  const [activeTab, setActiveTab] = useState(0); // 0: History, 1: Statistics
+
+  const handleTabChange = (event: any, newValue: number) => {
+    setActiveTab(newValue);
+  };
+
+  useEffect(() => {
+    fetchWorkoutData();
+  }, []);
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        {today.toLocaleString("default", { month: "long" })} {year}
-      </Typography>
-      <Grid container spacing={1}>
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-          <Grid item xs={1.7} key={day}>
-            <Typography variant="body2" fontWeight="bold">
-              {day}
-            </Typography>
-          </Grid>
-        ))}
-        {daysArray.map((day, index) => (
-          <Grid item xs={1.7} key={index}>
-            {day && (
-              <Paper
-                sx={{
-                  textAlign: "center",
-                  p: 1,
-                  backgroundColor: workoutDates.includes(
-                    `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
-                  )
-                    ? "lightblue"
-                    : "transparent",
-                }}
-              >
-                {day}
-              </Paper>
-            )}
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+    <div>
+      <div>
+        <h1 className="font-bold text-center text-3xl">Workout Report</h1>
+      </div>
+      <div>
+        <Box sx={{ width: "100%" }}>
+          <Tabs value={activeTab} onChange={handleTabChange}>
+            <Tab label="Workout Details" />
+
+            <Tab label="Workout Trends" />
+          </Tabs>
+          {/* Conditionally render the content based on the active tab */}
+          {activeTab === 0 && <WorkoutModal data={workoutData} />}{" "}
+          {/* Render WorkoutHistory */}
+          {activeTab === 1 && <WorkoutTrendChart />}{" "}
+          {/* Render WorkoutStatistics */}
+        </Box>
+      </div>
+    </div>
   );
 };
-export default Workout;
+export default Workouts;
