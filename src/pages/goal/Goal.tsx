@@ -41,7 +41,7 @@ const Goal = () => {
                 variant="contained"
                 onClick={() => setIsGoalCreateModalOpen(!isGoalCreateModalOpen)}
               >
-                CREATE A GOAL
+                UPDATE ACTIVE GOAL
               </Button>
 
               {isGoalCreateModalOpen && (
