@@ -20,11 +20,10 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import axios, { isAxiosError } from "axios";
+import axios from "axios";
 import { BASE_URL } from "../appConstant";
 import { toast } from "react-toastify";
 import { removeUser } from "../utils/userSlice";
-import { errorMonitor } from "events";
 import getAxiosError from "../utils/axiosError";
 
 interface Props {

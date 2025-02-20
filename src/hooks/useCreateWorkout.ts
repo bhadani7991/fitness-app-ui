@@ -4,7 +4,6 @@ import getAxiosError from "../utils/axiosError";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { BASE_URL } from "../appConstant";
-import { duration } from "@mui/material";
 
 //CREATE hook (post new user to api)
 export function useCreateWorkout() {

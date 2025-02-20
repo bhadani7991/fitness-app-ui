@@ -1,27 +1,15 @@
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import getAxiosError from "../../../utils/axiosError";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { BASE_URL } from "../../../appConstant";
-import { useDialogs } from "@toolpad/core";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { addGoal } from "../../../utils/goalSlice";
 import { RootState } from "../../../utils/appStore";
-
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
-  >
-    •
-  </Box>
-);
 
 export default function GoalModal() {
   const dispatch = useDispatch();

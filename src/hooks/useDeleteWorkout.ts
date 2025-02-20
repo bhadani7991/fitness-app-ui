@@ -1,10 +1,4 @@
-import {
-  QueryClient,
-  QueryClientProvider,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Workout } from "../pages/workout/model/workouts";
 import axios from "axios";
 import { BASE_URL } from "../appConstant";

@@ -1,4 +1,3 @@
-import { LegendToggleRounded } from "@mui/icons-material";
 import { Box, LinearProgress, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import getAxiosError from "../../../utils/axiosError";
@@ -8,7 +7,6 @@ import axios from "axios";
 import { BASE_URL } from "../../../appConstant";
 import { addGoalProgress } from "../../../utils/goalProgressSlice";
 import { RootState } from "../../../utils/appStore";
-import { GoalProgress } from "./goal";
 interface GoalProgressModelProps {}
 const GoalProgressModel: React.FC<GoalProgressModelProps> = (props) => {
   const dispatch = useDispatch();

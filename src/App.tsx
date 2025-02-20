@@ -6,7 +6,6 @@ import Workout from "./pages/workout/Workout";
 import Login from "./pages/auth/Login";
 import Goal from "./pages/goal/Goal";
 import Profile from "./pages/profile/Profile";
-import Logout from "./pages/logout/Logout";
 
 function App() {
   const navigate = useNavigate();
@@ -27,7 +26,6 @@ function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route path="/goals" element={<Goal />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/logout" element={<Logout />}></Route>
         </Route>
       </Routes>
     </div>

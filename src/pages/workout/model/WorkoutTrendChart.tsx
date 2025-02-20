@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
-import { Workout, WorkoutTrend } from "./workouts";
+import { WorkoutTrend } from "./workouts";
 import getAxiosError from "../../../utils/axiosError";
 import { toast } from "react-toastify";
 import axios from "axios";

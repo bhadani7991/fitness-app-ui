@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   MaterialReactTable,
   MRT_EditActionButtons,
@@ -15,14 +15,12 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  TextField,
   Tooltip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDeleteWorkout } from "../../../hooks/useDeleteWorkout";
 import { useGetUsers } from "../../../hooks/useGetUsers";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useUpdateWorkout } from "../../../hooks/useUpdateWorkout";
 import { useCreateWorkout } from "../../../hooks/useCreateWorkout";
 
@@ -30,19 +28,12 @@ interface WorkoutProps {
   data: Workout[];
 }
 
-const WorkoutModel: React.FC<WorkoutProps> = ({ data }) => {
-  const { mutateAsync: deleteWorkout, isPending: isDeletingUser } =
-    useDeleteWorkout();
-  const {
-    data: fetchedWorkout = [],
-    isError: isLoadingWorkoutError,
-    isFetching: isFetchingWorkout,
-    isLoading: isLoadingWorkout,
-  } = useGetUsers();
+const WorkoutModel: React.FC<WorkoutProps> = () => {
+  const { mutateAsync: deleteWorkout } = useDeleteWorkout();
+  const { data: fetchedWorkout = [] } = useGetUsers();
 
   //call CREATE hook
-  const { mutateAsync: createWorkout, isPending: isCreatingUser } =
-    useCreateWorkout();
+  const { mutateAsync: createWorkout } = useCreateWorkout();
 
   //CREATE action
   const handleCreateWorkout: MRT_TableOptions<Workout>["onCreatingRowSave"] =
@@ -52,8 +43,7 @@ const WorkoutModel: React.FC<WorkoutProps> = ({ data }) => {
     };
 
   //call UPDATE hook
-  const { mutateAsync: updateWorkout, isPending: isUpdatingUser } =
-    useUpdateWorkout();
+  const { mutateAsync: updateWorkout } = useUpdateWorkout();
   //should be memoized or stable
   const openDeleteConfirmModal = (row: MRT_Row<Workout>) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
@@ -145,6 +135,7 @@ const WorkoutModel: React.FC<WorkoutProps> = ({ data }) => {
         </DialogActions>
       </>
     ),
+
     renderRowActions: ({ row, table }) => (
       <Box sx={{ display: "flex", gap: "1rem" }}>
         <Tooltip title="Edit">
