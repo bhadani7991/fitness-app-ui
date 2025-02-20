@@ -11,3 +11,8 @@ export interface LoginResponse {
   message: string;
   entity: User;
 }
+
+export interface SignupResponse {
+  message: string;
+  entity: User;
+}
