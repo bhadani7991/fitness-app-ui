@@ -18,7 +18,9 @@ export function useUpdateWorkout() {
             type: workout.type,
             caloriesBurned: workout.caloriesBurned,
             duration: workout.duration,
-            updatedAt: workout.updatedAt,
+            updatedAt: workout.updatedAt
+              ? new Date(workout.updatedAt).toISOString()
+              : undefined,
           },
           { withCredentials: true }
         );

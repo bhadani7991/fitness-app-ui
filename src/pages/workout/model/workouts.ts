@@ -3,7 +3,7 @@ export interface Workout {
   type: string;
   duration: number;
   caloriesBurned: number;
-  updatedAt: string;
+  updatedAt: Date;
 }
 
 export interface WorkoutTrend {

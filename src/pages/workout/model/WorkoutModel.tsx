@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   MaterialReactTable,
   MRT_EditActionButtons,
@@ -23,6 +23,7 @@ import { useDeleteWorkout } from "../../../hooks/useDeleteWorkout";
 import { useGetUsers } from "../../../hooks/useGetUsers";
 import { useUpdateWorkout } from "../../../hooks/useUpdateWorkout";
 import { useCreateWorkout } from "../../../hooks/useCreateWorkout";
+import { validateWorkout } from "../../../utils/validation";
 
 interface WorkoutProps {
   data: Workout[];
@@ -31,6 +32,9 @@ interface WorkoutProps {
 const WorkoutModel: React.FC<WorkoutProps> = () => {
   const { mutateAsync: deleteWorkout } = useDeleteWorkout();
   const { data: fetchedWorkout = [] } = useGetUsers();
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string | undefined>
+  >({});
 
   //call CREATE hook
   const { mutateAsync: createWorkout } = useCreateWorkout();
@@ -38,6 +42,13 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
   //CREATE action
   const handleCreateWorkout: MRT_TableOptions<Workout>["onCreatingRowSave"] =
     async ({ values, table }) => {
+      const newValidationErrors = validateWorkout(values);
+      if (Object.values(newValidationErrors).some((error) => error)) {
+        setValidationErrors(newValidationErrors);
+        return;
+      }
+      console.log("coming");
+      setValidationErrors({});
       await createWorkout(values);
       table.setCreatingRow(null); //exit creating mode
     };
@@ -53,7 +64,12 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
   //UPDATE action
   const handleSaveWorkout: MRT_TableOptions<Workout>["onEditingRowSave"] =
     async ({ values, table }) => {
-      console.log(values);
+      const newValidationErrors = validateWorkout(values);
+      if (Object.values(newValidationErrors).some((error) => error)) {
+        setValidationErrors(newValidationErrors);
+        return;
+      }
+      setValidationErrors({});
       await updateWorkout(values);
       table.setEditingRow(null); //exit editing mode
     };
@@ -62,12 +78,22 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
       {
         accessorKey: "_id", //normal accessorKey
         header: "ID",
+        muiEditTextFieldProps: {
+          disabled: true,
+          hidden: true,
+        },
         size: 200,
       },
       {
         accessorKey: "updatedAt", //access nested data with dot notation
         header: "Date",
         size: 150,
+        muiEditTextFieldProps: {
+          required: true,
+          error: !!validationErrors?.updatedAt,
+          helperText: validationErrors?.updatedAt,
+          //remove any previous validation errors when user focuses on the input
+        },
         Cell: ({ cell }) => {
           const value = cell.getValue();
           if (typeof value === "string" || value instanceof Date) {
@@ -82,19 +108,55 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
         accessorKey: "type",
         header: "Workout",
         size: 150,
+        muiEditTextFieldProps: {
+          required: true,
+          error: !!validationErrors?.type,
+          helperText: validationErrors?.type,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              type: undefined,
+            }),
+          //optionally add validation checking for onBlur or onChange
+        },
       },
       {
         accessorKey: "duration", //normal accessorKey
         header: "Duration(In minutes)",
         size: 200,
+        muiEditTextFieldProps: {
+          required: true,
+          error: !!validationErrors?.duration,
+          helperText: validationErrors?.duration,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              duration: undefined,
+            }),
+          //optionally add validation checking for onBlur or onChange
+        },
       },
       {
         accessorKey: "caloriesBurned",
         header: "Calories Burned(In cal)",
         size: 150,
+        muiEditTextFieldProps: {
+          required: true,
+          error: !!validationErrors?.caloriesBurned,
+          helperText: validationErrors?.caloriesBurned,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              caloriesBurned: undefined,
+            }),
+          //optionally add validation checking for onBlur or onChange
+        },
       },
     ],
-    []
+    [validationErrors]
   );
 
   const table = useMaterialReactTable({
@@ -135,7 +197,8 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
         </DialogActions>
       </>
     ),
-
+    onCreatingRowCancel: () => setValidationErrors({}),
+    onEditingRowCancel: () => setValidationErrors({}),
     renderRowActions: ({ row, table }) => (
       <Box sx={{ display: "flex", gap: "1rem" }}>
         <Tooltip title="Edit">

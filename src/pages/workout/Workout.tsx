@@ -17,8 +17,13 @@ const Workouts: React.FC<WorkoutProps> = ({}) => {
       const response = await axios.get(`${BASE_URL}/workouts`, {
         withCredentials: true,
       });
-      console.log(response);
-      setWorkoutData(response.data.entity);
+
+      const formattedData = response.data.entity.map((workout: any) => ({
+        ...workout,
+        updatedAt: workout.updatedAt.split("T")[0], // Keep only date
+      }));
+      console.log(formattedData);
+      setWorkoutData(formattedData);
     } catch (error) {
       const appError = getAxiosError(error);
       toast.error(appError.errorMessage, { toastId: "fetchWorkoutDataError" });
