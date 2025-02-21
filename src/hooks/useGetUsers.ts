@@ -14,7 +14,11 @@ export function useGetUsers() {
         const response = await axios.get(`${BASE_URL}/workouts`, {
           withCredentials: true,
         });
-        return response.data.entity;
+        const formattedData = response.data.entity.map((workout: any) => ({
+          ...workout,
+          updatedAt: workout.updatedAt.split("T")[0],
+        }));
+        return formattedData;
       } catch (error) {
         const appError = getAxiosError(error);
         toast.error(appError.errorMessage, { toastId: "fetchUserError" });

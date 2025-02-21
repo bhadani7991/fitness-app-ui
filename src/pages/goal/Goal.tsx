@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import CreateGoalDialogBox from "./model/CreateGoalDialogBox";
 import GoalModal from "./model/GoalModal";
 import GoalProgressModel from "./model/GoalProgressModel";
+import WeekPicker from "./model/Weekpicker";
 
 const Goal = () => {
-  const [activeTab, setActiveTab] = useState<number>(0); // Tracks the active tab
+  const [activeTab, setActiveTab] = useState<number>(0);
   const [isGoalCreateModalOpen, setIsGoalCreateModalOpen] =
     useState<boolean>(false);
 
@@ -41,7 +42,7 @@ const Goal = () => {
                 variant="contained"
                 onClick={() => setIsGoalCreateModalOpen(!isGoalCreateModalOpen)}
               >
-                UPDATE ACTIVE GOAL
+                UPDATE/ADD ACTIVE GOAL
               </Button>
 
               {isGoalCreateModalOpen && (
@@ -58,8 +59,13 @@ const Goal = () => {
         {/* Tab 2: Progress */}
         {activeTab === 1 && (
           <div>
-            <GoalProgressModel />
-            {/* Add your component for displaying progress here */}
+            <div className="text-center">
+              <WeekPicker />
+            </div>
+            <div>
+              <GoalProgressModel />
+              {/* Add your component for displaying progress here */}
+            </div>
           </div>
         )}
       </Box>

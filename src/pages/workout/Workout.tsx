@@ -22,6 +22,7 @@ const Workouts: React.FC<WorkoutProps> = ({}) => {
         ...workout,
         updatedAt: workout.updatedAt.split("T")[0], // Keep only date
       }));
+
       console.log(formattedData);
       setWorkoutData(formattedData);
     } catch (error) {

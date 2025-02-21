@@ -8,6 +8,7 @@ import {
   type MRT_ColumnDef,
 } from "material-react-table";
 import { Workout } from "./workouts";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import {
   Box,
   Button,
@@ -31,11 +32,13 @@ interface WorkoutProps {
 
 const WorkoutModel: React.FC<WorkoutProps> = () => {
   const { mutateAsync: deleteWorkout } = useDeleteWorkout();
-  const { data: fetchedWorkout = [] } = useGetUsers();
+  const { data: fetchedWorkout = [], refetch } = useGetUsers();
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string | undefined>
   >({});
-
+  const handleRefersh = async () => {
+    await refetch();
+  };
   //call CREATE hook
   const { mutateAsync: createWorkout } = useCreateWorkout();
 
@@ -98,7 +101,8 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
           const value = cell.getValue();
           if (typeof value === "string" || value instanceof Date) {
             const utcDate = new Date(value);
-            const localDate = utcDate.toLocaleString(); // Converts UTC to local time
+            const localDate = utcDate.toLocaleString().split(",")[0]; // Converts UTC to local time
+            console.log(localDate);
             return <>{localDate}</>;
           }
           return null; // Return null if the value is not a valid date
@@ -163,7 +167,6 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
     columns,
 
     enableEditing: true,
-
     renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => {
       // Create a copy of the row's data for editing
 
@@ -219,21 +222,28 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
     getRowId: (row) => row._id ?? "",
     initialState: { columnVisibility: { _id: false } },
     renderTopToolbarCustomActions: ({ table }) => (
-      <Button
-        className="rounded-lg"
-        variant="contained"
-        onClick={() => {
-          table.setCreatingRow(true); //simplest way to open the create row modal with no default values
-          //or you can pass in a row object to set default values with the `createRow` helper function
-          // table.setCreatingRow(
-          //   createRow(table, {
-          //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
-          //   }),
-          // );
-        }}
-      >
-        + Add Workout
-      </Button>
+      <>
+        <Tooltip title="Refresh Data">
+          <IconButton color="primary" onClick={handleRefersh}>
+            <RefreshIcon />
+          </IconButton>
+        </Tooltip>
+        <Button
+          className="rounded-lg"
+          variant="contained"
+          onClick={() => {
+            table.setCreatingRow(true); //simplest way to open the create row modal with no default values
+            //or you can pass in a row object to set default values with the `createRow` helper function
+            // table.setCreatingRow(
+            //   createRow(table, {
+            //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
+            //   }),
+            // );
+          }}
+        >
+          + Add Workout
+        </Button>
+      </>
     ),
   });
 

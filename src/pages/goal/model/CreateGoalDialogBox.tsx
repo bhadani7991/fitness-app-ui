@@ -20,16 +20,22 @@ const CreateGoalDialogBox: React.FC<CreateGoalDialogBoxProps> = ({
   onClose,
   isOpen,
 }) => {
-  const [workoutsPerWeek, setWorkoutPerWeek] = React.useState<number>(0);
-  const [targetWeight, setTargetWeight] = React.useState<number>(0);
-  const [caloriesBurnedGoal, setCaloriedBurnedGoal] = React.useState<number>(0);
-  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(true);
-  const dispatch = useDispatch();
   const currentGoalData = useSelector((store: RootState) => store.goal) ?? {
     workoutsPerWeek: 0,
     targetWeight: 0,
     caloriesBurnedGoal: 0,
   };
+  const [workoutsPerWeek, setWorkoutPerWeek] = React.useState<number>(
+    currentGoalData?.workoutsPerWeek
+  );
+  const [targetWeight, setTargetWeight] = React.useState<number>(
+    currentGoalData?.targetWeight
+  );
+  const [caloriesBurnedGoal, setCaloriedBurnedGoal] = React.useState<number>(
+    currentGoalData?.caloriesBurnedGoal
+  );
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(true);
+  const dispatch = useDispatch();
 
   const handleGoalSave = async () => {
     try {
@@ -66,7 +72,7 @@ const CreateGoalDialogBox: React.FC<CreateGoalDialogBoxProps> = ({
         <TextField
           fullWidth
           label="Workouts Per Week"
-          value={currentGoalData?.workoutsPerWeek}
+          value={workoutsPerWeek}
           variant="standard"
           type="number"
           onChange={(e) => setWorkoutPerWeek(Number(e.target.value))}
@@ -76,7 +82,7 @@ const CreateGoalDialogBox: React.FC<CreateGoalDialogBoxProps> = ({
           fullWidth
           label="Target Weight(In Kg)"
           variant="standard"
-          value={currentGoalData?.targetWeight}
+          value={targetWeight}
           onChange={(e) => setTargetWeight(Number(e.target.value))}
           type="number"
           className="space-y-8"
@@ -85,7 +91,7 @@ const CreateGoalDialogBox: React.FC<CreateGoalDialogBoxProps> = ({
           fullWidth
           label="Target Calories Burned(In Cal)"
           type="number"
-          value={currentGoalData?.caloriesBurnedGoal}
+          value={caloriesBurnedGoal}
           onChange={(e) => setCaloriedBurnedGoal(Number(e.target.value))}
           variant="standard"
           className="space-y-8"
