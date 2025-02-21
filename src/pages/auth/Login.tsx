@@ -48,7 +48,6 @@ const Login: React.FC<LoginProps> = (props) => {
     }
   };
   const handleSignUpRequest = async () => {
-    console.log("called");
     try {
       validateSignupRequest(email, password, name, age, weight);
       const response = await loginServiceAgent.signUp({

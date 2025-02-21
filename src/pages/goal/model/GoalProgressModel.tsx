@@ -43,7 +43,7 @@ const GoalProgressModel: React.FC<GoalProgressModelProps> = (props) => {
     } catch (error) {
       const appError = getAxiosError(error);
       dispatch(addGoalProgress({}));
-      console.log(progress);
+
       //toast.error("No Goal Found", { toastId: "fetchGoalProgressError" });
     }
   };

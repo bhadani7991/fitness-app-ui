@@ -50,7 +50,7 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
         setValidationErrors(newValidationErrors);
         return;
       }
-      console.log("coming");
+
       setValidationErrors({});
       await createWorkout(values);
       table.setCreatingRow(null); //exit creating mode
@@ -102,7 +102,7 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
           if (typeof value === "string" || value instanceof Date) {
             const utcDate = new Date(value);
             const localDate = utcDate.toLocaleString().split(",")[0]; // Converts UTC to local time
-            console.log(localDate);
+
             return <>{localDate}</>;
           }
           return null; // Return null if the value is not a valid date

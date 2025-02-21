@@ -65,7 +65,6 @@ const NavBar = (props: Props) => {
       return navigate("/login");
     } catch (error) {
       const appError = getAxiosError(error);
-      console.log(appError);
       toast.error(appError.errorMessage, { toastId: "logoutError" });
     } finally {
       //clean up logic
