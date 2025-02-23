@@ -8,7 +8,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../appConstant";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { addGoal } from "../../../utils/goalSlice";
+import { addGoal, removeGoal } from "../../../utils/goalSlice";
 import { RootState } from "../../../utils/appStore";
 
 export default function GoalModal() {
@@ -21,6 +21,7 @@ export default function GoalModal() {
       });
       dispatch(addGoal(response.data.entity));
     } catch (error) {
+      dispatch(removeGoal(null));
       const appError = getAxiosError(error);
       toast.error(appError.errorMessage, { toastId: "fetchActiveGoalError" });
     }
