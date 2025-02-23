@@ -7,7 +7,7 @@ import {
   useMaterialReactTable,
   type MRT_ColumnDef,
 } from "material-react-table";
-import { Workout } from "./workouts";
+import { Workout, WorkoutHeader, Workoutkey } from "./workouts";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import {
   Box,
@@ -79,8 +79,8 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
   const columns = useMemo<MRT_ColumnDef<Workout>[]>(
     () => [
       {
-        accessorKey: "_id", //normal accessorKey
-        header: "ID",
+        accessorKey: Workoutkey.ID, //normal accessorKey
+        header: WorkoutHeader.ID,
         muiEditTextFieldProps: {
           disabled: true,
           hidden: true,
@@ -88,14 +88,21 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
         size: 200,
       },
       {
-        accessorKey: "updatedAt", //access nested data with dot notation
-        header: "Date",
+        accessorKey: Workoutkey.UPDATED_AT, //access nested data with dot notation
+        header: WorkoutHeader.UPDATED_AT,
         size: 150,
         muiEditTextFieldProps: {
           required: true,
           error: !!validationErrors?.updatedAt,
           helperText: validationErrors?.updatedAt,
+          placeholder: "yyyy-mm-dd",
+
           //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              updatedAt: undefined,
+            }),
         },
         Cell: ({ cell }) => {
           const value = cell.getValue();
@@ -109,8 +116,8 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
         },
       },
       {
-        accessorKey: "type",
-        header: "Workout",
+        accessorKey: Workoutkey.TYPE,
+        header: WorkoutHeader.TYPE,
         size: 150,
         muiEditTextFieldProps: {
           required: true,
@@ -126,8 +133,8 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
         },
       },
       {
-        accessorKey: "duration", //normal accessorKey
-        header: "Duration(In minutes)",
+        accessorKey: Workoutkey.DURATION, //normal accessorKey
+        header: WorkoutHeader.DURATION,
         size: 200,
         muiEditTextFieldProps: {
           required: true,
@@ -143,8 +150,8 @@ const WorkoutModel: React.FC<WorkoutProps> = () => {
         },
       },
       {
-        accessorKey: "caloriesBurned",
-        header: "Calories Burned(In cal)",
+        accessorKey: Workoutkey.CALORIES_BURNED,
+        header: WorkoutHeader.CALORIES_BURNED,
         size: 150,
         muiEditTextFieldProps: {
           required: true,
